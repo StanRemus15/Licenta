@@ -9,6 +9,7 @@ import seaborn as sns
 import pandas as pd
 import keras as kr
 
+
 set_date_antrenare = kr.utils.image_dataset_from_directory(
     'D:/Licenta/DataSetOrganized/data/train',
     labels="inferred",
@@ -50,4 +51,30 @@ set_date_validare = kr.utils.image_dataset_from_directory(
     format="tf",
     verbose=True,
 )
+
+model_antrenare = kr.models.Sequential()
+
+model_antrenare.add(kr.layers.Rescaling(1./255,input_shape=(256,256,3)))
+
+model_antrenare.add(kr.layers.Conv2D(filters=32, kernel_size= 3, padding='same',activation='relu'))
+model_antrenare.add(kr.layers.Conv2D(filters=32, kernel_size= 3, padding='same',activation='relu'))
+model_antrenare.add(kr.layers.MaxPooling2D(pool_size=2,strides=2))
+
+model_antrenare.add(kr.layers.Conv2D(filters=64, kernel_size= 3, padding='same',activation='relu'))
+model_antrenare.add(kr.layers.Conv2D(filters=64,kernel_size= 3, padding='same',activation='relu'))
+model_antrenare.add(kr.layers.MaxPooling2D(pool_size=2,strides=2))
+
+model_antrenare.add(kr.layers.Conv2D(filters=128, kernel_size= 3, padding='same',activation='relu'))
+model_antrenare.add(kr.layers.Conv2D(filters=128,kernel_size= 3, padding='same',activation='relu'))
+model_antrenare.add(kr.layers.MaxPooling2D(pool_size=2,strides=2))
+
+model_antrenare.add(kr.layers.Flatten())
+
+model_antrenare.add(kr.layers.Dense(512, activation='relu'))
+model_antrenare.add(kr.layers.Dropout(0.5))
+
+model_antrenare.add(kr.layers.Dense(5, activation='softmax'))
+
+
+
 
