@@ -54,7 +54,8 @@ set_date_validare = kr.utils.image_dataset_from_directory(
 
 model_antrenare = kr.models.Sequential()
 
-model_antrenare.add(kr.layers.Rescaling(1./255,input_shape=(256,256,3)))
+model_antrenare.add(kr.layers.Input(shape=(256,256,3)))
+model_antrenare.add(kr.layers.Rescaling(1./255))
 
 model_antrenare.add(kr.layers.Conv2D(filters=32, kernel_size= 3, padding='same',activation='relu'))
 model_antrenare.add(kr.layers.Conv2D(filters=32, kernel_size= 3, padding='same',activation='relu'))
