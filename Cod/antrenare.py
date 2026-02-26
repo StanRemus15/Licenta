@@ -75,6 +75,8 @@ model_antrenare.add(kr.layers.Dropout(0.5))
 
 model_antrenare.add(kr.layers.Dense(5, activation='softmax'))
 
+model_antrenare.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
+model_antrenare.summary()
 
 
