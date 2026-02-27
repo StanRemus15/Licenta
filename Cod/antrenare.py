@@ -76,8 +76,9 @@ model_antrenare.add(kr.layers.Dropout(0.5))
 
 model_antrenare.add(kr.layers.Dense(5, activation='softmax'))
 
-model_antrenare.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+model_antrenare.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 model_antrenare.summary()
 
+model_antrenare_istoric = model_antrenare.fit(x=set_date_antrenare,validation_data = set_date_validare,epochs=10)
 
