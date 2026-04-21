@@ -6,6 +6,10 @@ import uvicorn
 from PIL import Image
 import tensorflow as tf
 
+import os
+os.environ['TF_ENABLE_ONEDNN_OPTS']= '0'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
 app = FastAPI()
 @kr.saving.register_keras_serializable()
 def squeeze_excite_block(tensor,ratio=16):
@@ -33,7 +37,7 @@ async def analizare_poza(file: UploadFile = File(...)):
     index = np.argmax(predictii[0])
 
     return {
-        "boala_detectata ": clase_boli[index],
+        "boala_detectata": clase_boli[index],
         "siguranta":float(predictii[0][index]*100),
     }
 
