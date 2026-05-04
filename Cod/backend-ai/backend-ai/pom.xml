@@ -51,7 +51,12 @@
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+            <version>2.18.3</version>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>
