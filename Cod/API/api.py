@@ -33,12 +33,20 @@ async def analizare_poza(file: UploadFile = File(...)):
     imagine_array = kr.utils.img_to_array(imagine)
     imagine_array = np.expand_dims(imagine_array,axis=0)
 
-    predictii = model.predict(imagine_array)
-    index = np.argmax(predictii[0])
+    predictii = model.predict(imagine_array)[0]
+    rezultate = []
+    for i in range(len(clase_boli)):
+        rezultate.append({
+            "boala": clase_boli[i],
+            "siguranta": float(predictii[i] * 100)
+        })
+
+    rezultate = sorted(rezultate, key=lambda x: x['siguranta'], reverse=True)
 
     return {
-        "boala_detectata": clase_boli[index],
-        "siguranta":float(predictii[0][index]*100),
+        "boala_detectata": rezultate[0]['boala'],
+        "siguranta": rezultate[0]['siguranta'],
+        "alternative": rezultate[1:3]
     }
 
 if __name__ == "__main__":
