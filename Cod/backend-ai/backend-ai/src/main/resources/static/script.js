@@ -61,6 +61,29 @@ function populateResults(data) {
     const isHealthy = data.boala_detectata.toLowerCase().includes('healthy');
     const isUncertain = data.siguranta < 65;
 
+    if (data.eroare) {
+        alertBox.className = "alert-box danger";
+        alertBox.innerHTML = `
+            <div>
+                <div class="fw-bold">Scanare Invalida</div>
+                <div style="font-size: 11px;">${data.eroare}</div>
+            </div>`;
+
+
+        document.getElementById('resDiseaseName').innerText = "Nedetectat";
+        document.getElementById('resConfidence').innerText = "0%";
+        document.getElementById('resProgressBar').style.width = "0%";
+        document.getElementById('resProgressBar').style.backgroundColor = "#ccc";
+
+        recBox.innerHTML = `
+            <p class="text-muted mb-1" style="font-size: 11px; text-transform: uppercase;">Recomandare</p>
+            <p class="small mb-0">Incarcati o imagine clara, care contine exclusiv frunze de plante, pentru a rula diagnosticul.</p>
+        `;
+
+        if (btnSave) btnSave.style.display = 'none';
+        return;
+    }
+
     const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     document.getElementById('resultDate').innerText = today;
 
