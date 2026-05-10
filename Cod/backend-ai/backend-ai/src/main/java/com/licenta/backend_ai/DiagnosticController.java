@@ -62,6 +62,11 @@ public class DiagnosticController {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(jsonPy);
 
+            if(root.has("eroare")) {
+
+                return ResponseEntity.ok(jsonPy);
+            }
+
             Diagnostic diagnostic = new Diagnostic();
             diagnostic.setBoala(root.get("boala_detectata").asText());
             diagnostic.setSiguranta(root.get("siguranta").asDouble());
