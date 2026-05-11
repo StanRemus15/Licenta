@@ -69,8 +69,12 @@ print("Done")
 async def analizare_poza(file: UploadFile = File(...)):
     continut_poza = await file.read()
 
-    imagine = Image.open(io.BytesIO(continut_poza)).convert('RGB').resize((256,256))
-
+    try:
+        imagine = Image.open(io.BytesIO(continut_poza)).convert('RGB').resize((256,256))
+    except Exception as e:
+        return {"eroare": "Fisierul incarcat este corupt sau nu este o imagine valida."}
+    if imagine.width < 150 or imagine.height < 150:
+        return {"eroare": "Imaginea este prea mica sau neclara. Va rugam sa incarcati o fotografie mai mare."}
     if not contine_frunza(imagine):
         return {"eroare": "Imaginea nu este frunza"}
 
@@ -91,7 +95,7 @@ async def analizare_poza(file: UploadFile = File(...)):
         "boala_detectata": rezultate[0]['boala'],
         "siguranta": rezultate[0]['siguranta'],
         "alternative": rezultate[1:3]
-    }
+     }
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8050)
