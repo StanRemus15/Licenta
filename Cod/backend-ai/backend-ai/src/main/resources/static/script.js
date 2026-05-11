@@ -14,19 +14,16 @@ document.getElementById('navToHistory').addEventListener('click', () => {
     loadHistory();
     showScreen(screenHistory);
 });
+
 document.getElementById('btnNewScan').addEventListener('click', () => showScreen(screenUpload));
 document.getElementById('btnScanAgain').addEventListener('click', () => showScreen(screenUpload));
-document.getElementById('btnSaveHistory').addEventListener('click', () => {
-    loadHistory();
-    showScreen(screenHistory);
-});
 
 fileInput.addEventListener('change', async function() {
     const file = this.files[0];
     if (!file) return;
 
-    if (file.size > 10 * 1024 * 1024) {
-        alert("Imaginea este prea mare! Incarcati o poza de maxim 10MB.");
+    if (file.size > 5 * 1024 * 1024) {
+        alert("Imaginea este prea mare! Va rugam sa incarcati o poza de maxim 5MB.");
         fileInput.value = '';
         return;
     }
@@ -65,7 +62,6 @@ fileInput.addEventListener('change', async function() {
 function populateResults(data) {
     const alertBox = document.getElementById('alertBox');
     const recBox = document.querySelector('.recommendation-box');
-    const btnSave = document.getElementById('btnSaveHistory');
 
     if (data.eroare) {
         alertBox.className = "alert-box danger";
@@ -84,12 +80,8 @@ function populateResults(data) {
             <p class="text-muted mb-1" style="font-size: 11px; text-transform: uppercase;">Recomandare</p>
             <p class="small mb-0">Incarcati o imagine clara, care contine exclusiv frunze de plante, pentru a rula diagnosticul.</p>
         `;
-
-        if (btnSave) btnSave.style.display = 'none';
         return;
     }
-
-    if (btnSave) btnSave.style.display = 'block';
 
     const isHealthy = data.boala_detectata.toLowerCase().includes('healthy');
     const isUncertain = data.siguranta < 65;
@@ -163,6 +155,15 @@ async function loadHistory() {
         if (!listContainer) return;
 
         listContainer.innerHTML = '';
+
+        if (dateIstoric.length === 0) {
+            listContainer.innerHTML = `
+                <div class="text-center p-4 text-muted border rounded mt-3" style="background-color: #fafafa;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">📭</div>
+                    <small>Nu exista nicio scanare inca.<br>Prima ta analiza va aparea aici.</small>
+                </div>`;
+            return;
+        }
 
         dateIstoric.reverse().forEach(item => {
             const boalaNume = item.boala || "Diagnostic Necunoscut";
