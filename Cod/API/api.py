@@ -70,11 +70,11 @@ async def analizare_poza(file: UploadFile = File(...)):
     try:
         imagine = Image.open(io.BytesIO(continut_poza)).convert('RGB').resize((256,256))
     except Exception as e:
-        return {"eroare": "Fisierul incarcat este corupt sau nu este o imagine valida."}
+        return {"eroare": "The uploaded file is corrupted or not a valid image."}
     if imagine.width < 150 or imagine.height < 150:
-        return {"eroare": "Imaginea este prea mica sau neclara. Va rugam sa incarcati o fotografie mai mare."}
+        return {"eroare": "The image is too small or blurry. Please upload a larger photo."}
     if not contine_frunza(imagine):
-        return {"eroare": "Imaginea nu este frunza"}
+        return {"eroare": "The image must contain a clear leaf in the foreground."}
 
     imagine_array = kr.utils.img_to_array(imagine)
     imagine_array = np.expand_dims(imagine_array,axis=0)
