@@ -23,7 +23,7 @@ fileInput.addEventListener('change', async function() {
     if (!file) return;
 
     if (file.size > 5 * 1024 * 1024) {
-        alert("Imaginea este prea mare! Va rugam sa incarcati o poza de maxim 5MB.");
+        alert("The image is too large! Please upload a photo of maximum 10MB.");
         fileInput.value = '';
         return;
     }
@@ -48,11 +48,11 @@ fileInput.addEventListener('change', async function() {
             populateResults(data);
             setTimeout(() => showScreen(screenResults), 1500);
         } else {
-            alert("Eroare la procesarea pozei de catre server.");
+            alert("Error processing the image on the server.");
             showScreen(screenUpload);
         }
     } catch (error) {
-        alert("Eroare de conexiune cu serverul.");
+        alert("Server connection error.");
         showScreen(screenUpload);
     } finally {
         fileInput.value = '';
@@ -67,18 +67,18 @@ function populateResults(data) {
         alertBox.className = "alert-box danger";
         alertBox.innerHTML = `
             <div>
-                <div class="fw-bold">Scanare Invalida</div>
+                <div class="fw-bold">Invalid Scan</div>
                 <div style="font-size: 11px;">${data.eroare}</div>
             </div>`;
 
-        document.getElementById('resDiseaseName').innerText = "Nedetectat";
+        document.getElementById('resDiseaseName').innerText = "Undetected";
         document.getElementById('resConfidence').innerText = "0%";
         document.getElementById('resProgressBar').style.width = "0%";
         document.getElementById('resProgressBar').style.backgroundColor = "#ccc";
 
         recBox.innerHTML = `
-            <p class="text-muted mb-1" style="font-size: 11px; text-transform: uppercase;">Recomandare</p>
-            <p class="small mb-0">Incarcati o imagine clara, care contine exclusiv frunze de plante, pentru a rula diagnosticul.</p>
+            <p class="text-muted mb-1" style="font-size: 11px; text-transform: uppercase;">Recommendation</p>
+            <p class="small mb-0">Please upload a clear image containing exclusively plant leaves to run the diagnosis.</p>
         `;
         return;
     }
@@ -93,22 +93,22 @@ function populateResults(data) {
         alertBox.className = "alert-box warning";
         alertBox.innerHTML = `
             <div>
-                <div class="fw-bold">Diagnostic Incert (${data.siguranta.toFixed(0)}%)</div>
-                <div style="font-size: 11px;">AI-ul are dubii. Repetati poza la lumina mai buna.</div>
+                <div class="fw-bold">Uncertain Diagnosis (${data.siguranta.toFixed(0)}%)</div>
+                <div style="font-size: 11px;">The AI is in doubt. Please retake the photo in better light.</div>
             </div>`;
     } else if (isHealthy) {
         alertBox.className = "alert-box success";
         alertBox.innerHTML = `
             <div>
-                <div class="fw-bold">Planta Sanatoasa</div>
-                <div style="font-size: 11px;">Nicio boala detectata.</div>
+                <div class="fw-bold">Healthy Plant</div>
+                <div style="font-size: 11px;">No diseases detected.</div>
             </div>`;
     } else {
         alertBox.className = "alert-box danger";
         alertBox.innerHTML = `
             <div>
                 <div class="fw-bold">${data.boala_detectata}</div>
-                <div style="font-size: 11px;">Severitate Ridicata. Boala detectata.</div>
+                <div style="font-size: 11px;">High Severity. Disease detected.</div>
             </div>`;
     }
 
@@ -117,7 +117,7 @@ function populateResults(data) {
     document.getElementById('resProgressBar').style.width = data.siguranta + '%';
     document.getElementById('resProgressBar').style.backgroundColor = isUncertain ? "#EF9F27" : (isHealthy ? "#3B6D11" : "#E24B4A");
 
-    let alternativeHTML = `<p class="text-muted mt-3" style="font-size: 10px; text-transform: uppercase;">Alte posibilitati:</p>`;
+    let alternativeHTML = `<p class="text-muted mt-3" style="font-size: 10px; text-transform: uppercase;">Other possibilities:</p>`;
     data.alternative.forEach(alt => {
         alternativeHTML += `
             <div class="d-flex justify-content-between small text-muted">
@@ -129,9 +129,23 @@ function populateResults(data) {
             </div>`;
     });
 
+    const recomandari = {
+        'Anthracnose': "Remove infected leaves, apply a copper-based fungicide, and avoid overhead watering.",
+        'Bacterial Wilt': "Remove and destroy the plant immediately. Control cucumber beetles, as they spread the bacteria.",
+        'Downy Mildew': "Ensure good ventilation, reduce environmental humidity, and apply specific fungicides.",
+        'Gummy Stem Blight': "Clear infected plant debris, ensure crop rotation, and apply broad-spectrum fungicides.",
+        'Healthy': "The plant is healthy! Continue normal care and monitor it periodically."
+    };
+
+    let textRecomandare = recomandari[data.boala_detectata] || "Isolate the plant and consult a specialist for treatment.";
+
+    if (isUncertain) {
+        textRecomandare = "The diagnosis is uncertain. Please retake the photo, preferably in natural light, focusing clearly on the affected leaf.";
+    }
+
     recBox.innerHTML = `
-        <p class="text-muted mb-1" style="font-size: 11px; text-transform: uppercase;">Recomandare</p>
-        <p class="small mb-0">${isUncertain ? "Va recomandam o inspectie vizuala atenta." : "Izolati planta si aplicati tratamentul."}</p>
+        <p class="text-muted mb-1" style="font-size: 11px; text-transform: uppercase;">Treatment Recommendation</p>
+        <p class="small mb-0 fw-bold" style="color: #333;">${textRecomandare}</p>
         ${alternativeHTML}
     `;
 }
@@ -159,14 +173,14 @@ async function loadHistory() {
         if (dateIstoric.length === 0) {
             listContainer.innerHTML = `
                 <div class="text-center p-4 text-muted border rounded mt-3" style="background-color: #fafafa;">
-                    <div style="font-size: 24px; margin-bottom: 10px;">📭</div>
-                    <small>Nu exista nicio scanare inca.<br>Prima ta analiza va aparea aici.</small>
+                    <div style="font-size: 24px; margin-bottom: 10px;"></div>
+                    <small>No scans yet.<br>Your first analysis will appear here.</small>
                 </div>`;
             return;
         }
 
         dateIstoric.reverse().forEach(item => {
-            const boalaNume = item.boala || "Diagnostic Necunoscut";
+            const boalaNume = item.boala || "Unknown Diagnosis";
             const siguranta = item.siguranta || 0;
             const isHealthy = boalaNume.toLowerCase().includes('healthy');
 
@@ -181,7 +195,7 @@ async function loadHistory() {
                 dotColor = 'var(--warning)';
             }
 
-            let scanDate = "Data necunoscuta";
+            let scanDate = "Unknown date";
             if (item.dataScanarii) {
                 scanDate = new Date(item.dataScanarii).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
             }
