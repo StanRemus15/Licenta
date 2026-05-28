@@ -84,7 +84,7 @@ function populateResults(data) {
     }
 
     const isHealthy = data.boala_detectata.toLowerCase().includes('healthy');
-    const isUncertain = data.siguranta < 49;
+    const isUncertain = data.siguranta < 65;
 
     const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     document.getElementById('resultDate').innerText = today;
@@ -191,17 +191,19 @@ async function loadHistory() {
         dateIstoric.reverse().forEach(item => {
             const boalaNume = item.boala || "Unknown Diagnosis";
             const siguranta = item.siguranta || 0;
-            const isHealthy = boalaNume.toLowerCase().includes('healthy');
 
-            let typeClass = 'danger';
-            let dotColor = 'var(--danger)';
+            let typeClass = '';
+            let dotColor = '';
 
-            if (isHealthy) {
+            if (siguranta >= 80) {
                 typeClass = 'success';
-                dotColor = 'var(--primary)';
-            } else if (siguranta < 75) {
+                dotColor = '#3B6D11';
+            } else if (siguranta >= 49) {
                 typeClass = 'warning';
-                dotColor = 'var(--warning)';
+                dotColor = '#EF9F27';
+            } else {
+                typeClass = 'danger';
+                dotColor = '#E24B4A';
             }
 
             let scanDate = "Unknown date";
