@@ -84,7 +84,7 @@ function populateResults(data) {
     }
 
     const isHealthy = data.boala_detectata.toLowerCase().includes('healthy');
-    const isUncertain = data.siguranta < 65;
+    const isUncertain = data.siguranta < 49;
 
     const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     document.getElementById('resultDate').innerText = today;
@@ -116,14 +116,13 @@ function populateResults(data) {
     document.getElementById('resConfidence').innerText = data.siguranta.toFixed(0) + '%';
     document.getElementById('resProgressBar').style.width = data.siguranta + '%';
 
-    // Logica nouă pentru culoarea barei de acuratețe
     let barColor = "";
     if (data.siguranta >= 80) {
-        barColor = "#3B6D11"; // Verde
-    } else if (data.siguranta >= 55) {
-        barColor = "#EF9F27"; // Galben
+        barColor = "#3B6D11";
+    } else if (data.siguranta >= 49) {
+        barColor = "#EF9F27";
     } else {
-        barColor = "#E24B4A"; // Roșu
+        barColor = "#E24B4A";
     }
     document.getElementById('resProgressBar').style.backgroundColor = barColor;
 
