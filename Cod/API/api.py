@@ -26,7 +26,6 @@ def contine_frunza(imagine_pil):
     img_bgr = cv2.cvtColor(img_array, cv2.COLOR_RGB2BGR)
     img_hsv = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2HSV)
 
-
     lower_bound = np.array([30, 40, 30])
     upper_bound = np.array([85, 255, 200])
 
@@ -43,7 +42,6 @@ def contine_frunza(imagine_pil):
 
     aria_totala_poza = img_bgr.shape[0] * img_bgr.shape[1]
     aria_totala_verde = 0
-
 
     for contur in contururi:
         aria = cv2.contourArea(contur)
@@ -71,8 +69,7 @@ print("Done")
 
 @app.post("/diagnostic")
 async def analizare_poza(file: UploadFile = File(...)):
-    continut_poza = await file.read()
-
+    continut_poza = await file.read(
     try:
         imagine = Image.open(io.BytesIO(continut_poza)).convert('RGB').resize((256,256))
     except Exception as e:
@@ -94,7 +91,6 @@ async def analizare_poza(file: UploadFile = File(...)):
         })
 
     rezultate = sorted(rezultate, key=lambda x: x['siguranta'], reverse=True)
-
     return {
         "boala_detectata": rezultate[0]['boala'],
         "siguranta": rezultate[0]['siguranta'],
