@@ -69,7 +69,7 @@ print("Done")
 
 @app.post("/diagnostic")
 async def analizare_poza(file: UploadFile = File(...)):
-    continut_poza = await file.read(
+    continut_poza = await file.read()
     try:
         imagine = Image.open(io.BytesIO(continut_poza)).convert('RGB').resize((256,256))
     except Exception as e:
