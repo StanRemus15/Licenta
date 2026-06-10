@@ -12,6 +12,8 @@ public class Diagnostic {
     private Double siguranta;
     private LocalDateTime dataScanarii;
 
+    private Long userId;
+
     public Diagnostic() {
         this.dataScanarii = LocalDateTime.now();
     }
@@ -22,4 +24,7 @@ public class Diagnostic {
     public void setSiguranta(Double siguranta) {this.siguranta = siguranta;}
     public LocalDateTime getDataScanarii() {return dataScanarii;}
 
+
+    public Long getUserId(){return userId;}
+    public void setUserId(Long userId){this.userId = userId;}
 }
