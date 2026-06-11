@@ -113,6 +113,8 @@ async def analizare_poza(file: UploadFile = File(...)):
     imagine_array = np.expand_dims(imagine_array,axis=0)
 
     predictii = model.predict(imagine_array)[0]
+    index_clasa_prezisa = int(np.argmax(predictii))
+
     rezultate = []
     for i in range(len(clase_boli)):
         rezultate.append({
