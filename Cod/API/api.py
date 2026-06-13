@@ -73,11 +73,13 @@ print("Done")
 async def analizare_poza(file: UploadFile = File(...)):
     continut_poza = await file.read()
     try:
-        imagine = Image.open(io.BytesIO(continut_poza)).convert('RGB').resize((256,256))
+        imagine = Image.open(io.BytesIO(continut_poza)).convert('RGB')
     except Exception as e:
         return {"eroare": "The uploaded file is corrupted or not a valid image."}
     if imagine.width < 150 or imagine.height < 150:
         return {"eroare": "The image is too small or blurry. Please upload a larger photo."}
+    imagine = imagine.resize((256,256))
+
     if not contine_frunza(imagine):
         return {"eroare": "The image must contain a clear leaf in the foreground."}
 
